@@ -14,7 +14,21 @@ class VendingMachine
   # 投入金額の総計を取得できる。
   def current_slot_money
     # 自動販売機に入っているお金を表示する
-    @slot_money
+    puts "合計金額は#{@slot_money}円です。"
+    puts "購入に移る：1"
+    puts "取りやめる：2"
+    while true
+      num = gets.chomp.to_i
+      if num == 1
+        return "購入の処理に続く"
+      elsif num == 2
+        return @slot_money
+      else
+        puts "1か2を入力してください"
+        puts "購入に移る：1"
+        puts "取りやめる：2"
+      end
+    end
   end
 
   # 10円玉、50円玉、100円玉、500円玉、1000円札を１つずつ投入できる。
@@ -27,7 +41,12 @@ class VendingMachine
     # 自動販売機にお金を入れる
       @slot_money += money
     else
-      money
+      if money == 0
+        puts "10円玉、50円玉、100円玉、500円玉、1000円札以外は使用できません。"
+      else
+        puts "10円玉、50円玉、100円玉、500円玉、1000円札以外は使用できません。"
+        return money
+      end
     end
   end
 
@@ -43,9 +62,29 @@ end
 
 class MoneySlotting
   def self.money_slotting
-    vm = VendingMachine.new
-    puts "金入れろ"
-    vm.slot_money(gets.chomp.to_i)
+    @vm = VendingMachine.new
+    while true#ユーザーが購入処理or返金に移るまで繰り返す
+      puts "金入れろ"
+      @vm.slot_money(gets.chomp.to_i)
+      puts "投入金額は以上ですか？"
+      puts "以上です：1"
+      puts "追加する：2"
+      num = gets.chomp.to_i
+      if num == 1
+        return false
+      elsif num == 2
+        true
+      else
+        puts "1か2を入力してください"
+        puts "以上です：1"
+        puts "追加する：2"
+      end
+    end
+
+    def self.sum_of_slot_maney
+      @vm.current_slot_money
+    end
+
   end
   # vm.slot_money(1000)
   # vm.slot_money(1)
@@ -53,5 +92,9 @@ class MoneySlotting
 end
 
 MoneySlotting.money_slotting
+MoneySlotting.sum_of_slot_maney
+
+
+# puts VendingMachine.new.current_slot_money
 
 
