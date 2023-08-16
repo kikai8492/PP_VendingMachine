@@ -9,6 +9,7 @@ class VendingMachine
   def initialize
     # 最初の自動販売機に入っている金額は0円
     @slot_money = 0
+    @juice = {name: "コーラ", price: 120, stock: 5}
   end
 
 
@@ -51,9 +52,11 @@ class VendingMachine
             return
           elsif num == 2
             break
-          else num == 3
+          elsif num == 3
             puts "#{@slot_money}円を返金します"
             exit
+          else #1~3以外の入力を処理すると45行目に戻るためelseの中は記載不要
+            
           end
         end
       end
@@ -81,7 +84,35 @@ class VendingMachine
     end
   end
 
+  def buy
+    puts "購入する商品を選んでください"
+    if @slot_money >= @juice[:price] && @juice[:stock] > 0
+      puts "購入可能商品は以下の通り"
+      puts "番号1:#{@juice[:name]}、#{@juice[:price]}円、残り#{@juice[:stock]}個"
+    end
+    num = gets.chomp.to_i
+    if num == 1 && @slot_money >= @juice[:price] && @juice[:stock] > 0
+      puts "#{@juice[:name]}を購入しました"
+      @juice[:stock] -= 1
+      @slot_money -= @juice[:price]
+      puts "残金は#{@slot_money}円です"
+    elsif num == 1 && @slot_money < @juice[:price]
+      puts "お金が足りません"
+    elsif num == 1 && @juice[:stock] == 0
+      puts "在庫がありません"
+    else
+      puts "1を入力してください"
+    end
+      
+    
+    
+  end
+end
 
+vm = VendingMachine.new
+vm.slot_money
+vm.current_slot_money
+vm.buy
 
   # 払い戻し操作を行うと、投入金額の総計を釣り銭として出力する。
   def return_money
@@ -91,33 +122,9 @@ class VendingMachine
     # 自動販売機に入っているお金を0円に戻す
     @slot_money = 0
   end
-end
 
-vm = VendingMachine.new
-vm.slot_money
-vm.current_slot_money
-# vm.current_slot_money
-# class MoneySlotting
-#   def self.money_slotting
-#     @vm = VendingMachine.new
-   
-     
-   
+  juice = {name: "コーラ", price: 120, stock: 5} 
 
-#     def self.sum_of_slot_maney
-#       @vm.current_slot_money
-#     end
-
-#   end
-#   # vm.slot_money(1000)
-#   # vm.slot_money(1)
-#   # puts vm.current_slot_money
-# end
-
-# MoneySlotting.money_slotting
-# MoneySlotting.sum_of_slot_maney
-
-
-# puts VendingMachine.new.current_slot_money
-
-
+  #次回やること
+  # drinkクラスを作ってそっちに、ジュースの情報を保持する
+  # drinkクラスを作った時に、intializaメソッドで引数3つをつける(name,price,stock)
