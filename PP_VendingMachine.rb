@@ -10,6 +10,7 @@ class VendingMachine
     # 最初の自動販売機に入っている金額は0円
     @slot_money = 0
     @juice = {name: "コーラ", price: 120, stock: 5}
+    @sales_money = 0
   end
 
 
@@ -17,7 +18,7 @@ class VendingMachine
   # 投入は複数回できる。
   def slot_money
     while true#ユーザーが購入処理or返金に移るまで繰り返す
-      puts "金入れろ"
+      puts "お金を投入してください"
       money = gets.chomp.to_i
           # 想定外のもの（１円玉や５円玉。千円札以外のお札、そもそもお金じゃないもの（数字以外のもの）など）
       # が投入された場合は、投入金額に加算せず、それをそのまま釣り銭としてユーザに出力する。
@@ -34,8 +35,10 @@ class VendingMachine
       puts "追加する：2"
       puts "払い戻す：3"
       num = gets.chomp.to_i
-      if num == 1
+      if num == 1 && @slot_money >= @juice[:price]
         return false
+      elsif num == 1 && @slot_money < @juice[:price]
+        puts "投入金額が不足しています"
       elsif num == 2
         true
       elsif num == 3
@@ -48,15 +51,17 @@ class VendingMachine
           puts "追加する：2"
           puts "払い戻す：3"
           num = gets.chomp.to_i
-          if num == 1 
-            return
+          if num == 1 && @slot_money >= @juice[:price]
+            return false
+          elsif num == 1 && @slot_money < @juice[:price]
+            puts "投入金額が不足しています"
+            break
           elsif num == 2
             break
           elsif num == 3
             puts "#{@slot_money}円を返金します"
             exit
-          else #1~3以外の入力を処理すると45行目に戻るためelseの中は記載不要
-            
+          else #1~3以外の入力を処理すると49行目に戻るためelseの中は記載不要
           end
         end
       end
@@ -85,27 +90,47 @@ class VendingMachine
   end
 
   def buy
-    puts "購入する商品を選んでください"
-    if @slot_money >= @juice[:price] && @juice[:stock] > 0
+    while @slot_money >= @juice[:price] && @juice[:stock] > 0
       puts "購入可能商品は以下の通り"
+      puts "欲しい商品の番号を入力してください"
       puts "番号1:#{@juice[:name]}、#{@juice[:price]}円、残り#{@juice[:stock]}個"
+      num = gets.chomp.to_i
+      if num == 1
+        puts "#{@juice[:name]}を購入しました"
+        @juice[:stock] -= 1
+        @slot_money -= @juice[:price]
+        @sales_money += @juice[:price]
+        puts "残金は#{@slot_money}円です"
+        puts "売上金額は#{@sales_money}円です"
+        if @slot_money == 0
+          puts "#{@slot_money}円を返金します"
+          exit
+        end
+        puts "追加で購入する：1"
+        puts "払い戻す：2"
+        while true
+          num = gets.chomp.to_i
+          if num == 1
+            break
+          elsif num == 2
+            puts "#{@slot_money}円を返金します"
+            exit
+          else
+            puts "1か2を入力してください"
+            puts "追加で購入する：1"
+            puts "払い戻す：2"
+          end
+        end
+      else
+        puts "購入可能な商品の番号を入力してください"
+      end
     end
-    num = gets.chomp.to_i
-    if num == 1 && @slot_money >= @juice[:price] && @juice[:stock] > 0
-      puts "#{@juice[:name]}を購入しました"
-      @juice[:stock] -= 1
-      @slot_money -= @juice[:price]
-      puts "残金は#{@slot_money}円です"
-    elsif num == 1 && @slot_money < @juice[:price]
-      puts "お金が足りません"
-    elsif num == 1 && @juice[:stock] == 0
+    if @juice[:stock] == 0
       puts "在庫がありません"
     else
-      puts "1を入力してください"
+      puts "購入金額が不足しています"
     end
-      
-    
-    
+    puts "#{@slot_money}円を返金します"
   end
 end
 
@@ -126,5 +151,4 @@ vm.buy
   juice = {name: "コーラ", price: 120, stock: 5} 
 
   #次回やること
-  # drinkクラスを作ってそっちに、ジュースの情報を保持する
-  # drinkクラスを作った時に、intializaメソッドで引数3つをつける(name,price,stock)
+  #飲み物の種類を増やす
