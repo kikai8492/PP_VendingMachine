@@ -1,4 +1,4 @@
-class VendingMachine
+class VendingMachine 
   # ステップ０　お金の投入と払い戻しの例コード
   # ステップ１　扱えないお金の例コード
 
@@ -10,6 +10,8 @@ class VendingMachine
     # 最初の自動販売機に入っている金額は0円
     @slot_money = 0
     @juice = {name: "コーラ", price: 120, stock: 5}
+              
+            
     @sales_money = 0
   end
 
@@ -139,16 +141,31 @@ vm.slot_money
 vm.current_slot_money
 vm.buy
 
-  # 払い戻し操作を行うと、投入金額の総計を釣り銭として出力する。
-  def return_money
-    # 返すお金の金額を表示する
+#   # 払い戻し操作を行うと、投入金額の総計を釣り銭として出力する。
+#   # def return_money
+#   #   # 返すお金の金額を表示する
     
-      puts @slot_money
-    # 自動販売機に入っているお金を0円に戻す
-    @slot_money = 0
+#   #     puts @slot_money
+#   #   # 自動販売機に入っているお金を0円に戻す
+#   #   @slot_money = 0
+#   # end
+
+#   #juice = {name: "コーラ", price: 120, stock: 5} 
+
+#   #次回やること
+#   #飲み物の種類を増やす
+
+class Drink
+  attr_accessor :name, :price, :stock
+  def initialize(name, price, stock)
+    @name = name
+    @price = price
+    @stock = stock
   end
+end
+  drinks = []
+  drinks << Drink.new("コーラ", 120, 5)
+  drinks << Drink.new("レッドブル", 200, 5)
+  drinks << Drink.new("水", 100, 5)
 
-  juice = {name: "コーラ", price: 120, stock: 5} 
 
-  #次回やること
-  #飲み物の種類を増やす
