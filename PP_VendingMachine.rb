@@ -1,24 +1,44 @@
-class VendingMachine 
-  # ステップ０　お金の投入と払い戻しの例コード
-  # ステップ１　扱えないお金の例コード
+class Drink
+  attr_accessor :name, :price, :stock
+  def initialize(name, price, stock)
+    @name = name
+    @price = price
+    @stock = stock 
+  end
+end
+  $drinks = []
+  $drinks << Drink.new("コーラ", 120, 5)
+  $drinks << Drink.new("レッドブル", 200, 5)
+  $drinks << Drink.new("水", 100, 5)
 
-  # 10円玉、50円玉、100円玉、500円玉、1000円札を１つずつ投入できる。
-  MONEY = [10, 50, 100, 500, 1000].freeze
   
-  # （自動販売機に投入された金額をインスタンス変数の @slot_money に代入する）
-  def initialize
-    # 最初の自動販売機に入っている金額は0円
-    @slot_money = 0
-    @juice = {name: "コーラ", price: 120, stock: 5}
-              
-            
-    @sales_money = 0
+  class VendingMachine < Drink
+    # ステップ０　お金の投入と払い戻しの例コード
+    # ステップ１　扱えないお金の例コード
+    
+    # 10円玉、50円玉、100円玉、500円玉、1000円札を１つずつ投入できる。
+    MONEY = [10, 50, 100, 500, 1000].freeze
+    
+    # （自動販売機に投入された金額をインスタンス変数の @slot_money に代入する）
+    def initialize
+      # 最初の自動販売機に入っている金額は0円
+      @slot_money = 0
+      # @juice = {name: "コーラ", price: 120, stock: 5}
+      
+      @sales_money = 0
+
+      
+    end
   end
 
 
     # 10円玉、50円玉、100円玉、500円玉、1000円札を１つずつ投入できる。
   # 投入は複数回できる。
   def slot_money
+    @juice = $drinks
+    @juices = @juice.map{|juice| juice.name}
+    @prices = @juice.map{|juice| juice.price}
+    @stocks = @juice.map{|juice| juice.stock}
     while true#ユーザーが購入処理or返金に移るまで繰り返す
       puts "お金を投入してください"
       money = gets.chomp.to_i
@@ -37,9 +57,9 @@ class VendingMachine
       puts "追加する：2"
       puts "払い戻す：3"
       num = gets.chomp.to_i
-      if num == 1 && @slot_money >= @juice[:price]
+      if num == 1 && @slot_money >= @prices.min
         return false
-      elsif num == 1 && @slot_money < @juice[:price]
+      elsif num == 1 && @slot_money < @prices.min
         puts "投入金額が不足しています"
       elsif num == 2
         true
@@ -53,9 +73,9 @@ class VendingMachine
           puts "追加する：2"
           puts "払い戻す：3"
           num = gets.chomp.to_i
-          if num == 1 && @slot_money >= @juice[:price]
+          if num == 1 && @slot_money >= @prices.min
             return false
-          elsif num == 1 && @slot_money < @juice[:price]
+          elsif num == 1 && @slot_money < @prices.min
             puts "投入金額が不足しています"
             break
           elsif num == 2
@@ -63,8 +83,6 @@ class VendingMachine
           elsif num == 3
             puts "#{@slot_money}円を返金します"
             exit
-          else #1~3以外の入力を処理すると49行目に戻るためelseの中は記載不要
-          end
         end
       end
     end
@@ -92,10 +110,13 @@ class VendingMachine
   end
 
   def buy
-    while @slot_money >= @juice[:price] && @juice[:stock] > 0
+    while @slot_money >= @prices.min && @stocks.min > 0
       puts "購入可能商品は以下の通り"
       puts "欲しい商品の番号を入力してください"
-      puts "番号1:#{@juice[:name]}、#{@juice[:price]}円、残り#{@juice[:stock]}個"
+      @juice.each_with_index do |juice, i|
+        binding.irb
+        puts "番号#{i}:#{@juice[:name]}、#{@juice[:price]}円、残り#{@juice[:stock]}個"
+      end
       num = gets.chomp.to_i
       if num == 1
         puts "#{@juice[:name]}を購入しました"
@@ -155,17 +176,6 @@ vm.buy
 #   #次回やること
 #   #飲み物の種類を増やす
 
-class Drink
-  attr_accessor :name, :price, :stock
-  def initialize(name, price, stock)
-    @name = name
-    @price = price
-    @stock = stock
-  end
-end
-  drinks = []
-  drinks << Drink.new("コーラ", 120, 5)
-  drinks << Drink.new("レッドブル", 200, 5)
-  drinks << Drink.new("水", 100, 5)
+
 
 
