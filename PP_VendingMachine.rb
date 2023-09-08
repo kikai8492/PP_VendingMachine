@@ -11,7 +11,6 @@ end
   $drinks << Drink.new("レッドブル", 200, 5)
   $drinks << Drink.new("水", 100, 5)
 
-  
   class VendingMachine < Drink
     # ステップ０　お金の投入と払い戻しの例コード
     # ステップ１　扱えないお金の例コード
@@ -27,12 +26,10 @@ end
       
       @sales_money = 0
 
-      
     end
   end
 
-
-    # 10円玉、50円玉、100円玉、500円玉、1000円札を１つずつ投入できる。
+  # 10円玉、50円玉、100円玉、500円玉、1000円札を１つずつ投入できる。
   # 投入は複数回できる。
   def slot_money
     @juice = $drinks
@@ -42,7 +39,7 @@ end
     while true#ユーザーが購入処理or返金に移るまで繰り返す
       puts "お金を投入してください"
       money = gets.chomp.to_i
-          # 想定外のもの（１円玉や５円玉。千円札以外のお札、そもそもお金じゃないもの（数字以外のもの）など）
+      # 想定外のもの（１円玉や５円玉。千円札以外のお札、そもそもお金じゃないもの（数字以外のもの）など）
       # が投入された場合は、投入金額に加算せず、それをそのまま釣り銭としてユーザに出力する。
       # return money unless MONEY.include?(money)
       if MONEY.include?(money)
@@ -83,6 +80,7 @@ end
           elsif num == 3
             puts "#{@slot_money}円を返金します"
             exit
+          end
         end
       end
     end
